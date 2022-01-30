@@ -1,0 +1,14 @@
+---
+- name: "Download node exporter tar"
+  get_url:
+    url: "https://github.com/node_exporter/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
+    dest: "files/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
+  register: download_node_exporter
+  delegate_to: localhost
+  until: download_node_exporter is succeeded
+  when: node_exporter_install_type == 'remote'
+- name: Copy node_exporter to managed node
+  copy:
+    src: "files/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
+    mode: 0755
+    dest: "/tmp/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"

@@ -1,0 +1,14 @@
+---
+- name: Create directrory for node exporter
+  become: true
+  file:
+    state: directory
+    path: "/opt/node_exporter"
+    owner: "{{ ansible_user_id }}"
+- name: Extract node exporter in the installation directory
+  unarchive:
+    copy: false
+    src: "/tmp/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
+    dest: "/opt/node_exporter/"
+    extra_opts: [--strip-components=1]
+    creates: "/opt/node_exporter/node_exporter"
